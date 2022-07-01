@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,10 +15,11 @@ public class UserDaoService {
 	
 	private static int usersCount = 3;
 	
+	
 	static {
-		users.add(new User(1, 0, "andre", "andre@itau.com.br", LocalDate.of(2022, 4, 14)));
-		users.add(new User(2, 0, "maria", "maria@itau.com.br", LocalDate.of(2022, 4, 14)));
-		users.add(new User(3, 0, "joao", "joao@itau.com.br", LocalDate.of(2022, 4, 14)));
+		users.add(new User(1, "andre", "123456", "andre@itau.com.br", LocalDate.of(2022, 4, 14)));
+		users.add(new User(2, "maria", "platinum123", "maria@itau.com.br", LocalDate.of(2022, 4, 14)));
+		users.add(new User(3, "joao", "pass123word", "joao@itau.com.br", LocalDate.of(2022, 4, 14)));
 	}
 	
 	// Method to list all users
@@ -29,6 +32,13 @@ public class UserDaoService {
 		if(user.getId()==null) {
 			user.setId(++usersCount);
 		}
+		if(user.getPoints()==null) {
+			user.setPoints(0);
+		}
+		if(user.getProfile()==null) {
+			user.setProfile("READER");
+		}
+		//user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		users.add(user);
 		return user;
 	}
@@ -55,5 +65,11 @@ public class UserDaoService {
 		}
 		return null;
 	}
+	
+	public interface UserRepository extends JpaRepository<User, String>{ 
+	    User findByUsername(String username); 
+	}
+	
+
 	
 }

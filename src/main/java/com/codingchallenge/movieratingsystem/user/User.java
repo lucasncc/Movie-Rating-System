@@ -3,15 +3,21 @@ package com.codingchallenge.movieratingsystem.user;
 import java.time.LocalDate;
 import java.util.HashMap;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
-import javax.validation.constraints.NotNull;
 
+@Entity
 public class User {
 	
+	@Id
+	@GeneratedValue
 	private Integer id;
 	
 	private Integer points;
@@ -22,13 +28,19 @@ public class User {
 	@Size(min=3, message="Username should have at least 3 characters")
 	private String username;
 	
+	@NotNull(message="Password cant be null")
+	@NotEmpty(message="Password cant be empty")
+	@NotBlank(message="Password cant be blank")
+	@Size(min=6, message="Password should have at least 6 characters")
+	private String password;
+	
 	@NotNull(message="Email cant be null")
 	@NotEmpty(message="Email cant be empty")
 	@NotBlank(message="Email cant be blank")
 	@Email(message="Email not valid")
 	private String email;
 	
-	private HashMap<String, Boolean> profile = new HashMap<String, Boolean>();
+	private String profile;
 	
 	@Past(message = "Birthdate must be a past date")
 	private LocalDate birthDate;
@@ -37,18 +49,17 @@ public class User {
 		
 	}
 	
-	public User(Integer id, Integer points, String username, String email, LocalDate birthDate) {
+
+	public User(Integer id, String username, String password, String email, LocalDate birthDate) {
 		super();
 		this.id = id;
-		this.points = points;
 		this.username = username;
+		this.password = password;
 		this.email = email;
 		this.birthDate = birthDate;
 		
-		this.profile.put("READER", true);
-		this.profile.put("BASIC", false);
-		this.profile.put("ADVANCED", false);
-		this.profile.put("MODERATOR", false);
+		this.points = 0;
+		this.profile = "READER";
 	}
 	
 	public void addPoint(User user) {
@@ -58,38 +69,19 @@ public class User {
 	
 	public void updateProfile(User user) {
 		int userPoints = user.getPoints().intValue();
-		if(userPoints < 20) {
-			if(!user.getProfile().get("READER")) {
-				user.getProfile().replace("READER", true);
-			}
-		} else if (userPoints < 100) {
-			if(!user.getProfile().get("BASIC")) {
-				user.getProfile().replace("BASIC", true);
-			}
-		} else if (userPoints < 1000) {
-			if(!user.getProfile().get("ADVANCED")) {
-				user.getProfile().replace("ADVANCED", true);
-			}
+		if(userPoints < 20 && user.getProfile() != "MODERATOR") {
+			user.setProfile("READER");
+		} else if (userPoints < 100 && user.getProfile() != "MODERATOR") {
+			user.setProfile("BASIC");
+		} else if (userPoints < 1000 && user.getProfile() != "MODERATOR") {
+			user.setProfile("ADVANCED");
 		} else {
-			if(!user.getProfile().get("MODERATOR")) {
-				user.getProfile().replace("MODERATOR", true);
-			}
+			user.setProfile("MODERATOR");
 		}
 	}
 	
 	public void setModerator(User user) {
-		if(!user.getProfile().get("READER")) {
-			user.getProfile().replace("READER", true);
-		}
-		if(!user.getProfile().get("BASIC")) {
-			user.getProfile().replace("BASIC", true);
-		}
-		if(!user.getProfile().get("ADVANCED")) {
-			user.getProfile().replace("ADVANCED", true);
-		}
-		if(!user.getProfile().get("MODERATOR")) {
-			user.getProfile().replace("MODERATOR", true);
-		}
+		user.setProfile("MODERATOR");
 	}
 	
 	public Integer getId() {
@@ -110,17 +102,23 @@ public class User {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public HashMap<String, Boolean> getProfile() {
+	public String getProfile() {
 		return profile;
 	}
 
-	public void setProfile(HashMap<String, Boolean> profile) {
+	public void setProfile(String profile) {
 		this.profile = profile;
 	}
 	public LocalDate getBirthDate() {

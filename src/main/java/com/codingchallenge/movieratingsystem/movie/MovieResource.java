@@ -31,8 +31,8 @@ public class MovieResource {
 	 * input - imdb id used to search movie
 	 * output - JSON object with movie info
 	*/
-	@GetMapping("/movies/{id}")
-	private Object getMovieByTerm(@PathVariable int id) {
+	@GetMapping("/movies/id/{id}")
+	private Object getMovieById(@PathVariable String id) {
 		String url = "https://www.omdbapi.com/?apikey="+omdbApiKey+"&i="+id;
 		RestTemplate restTemplate = new RestTemplate();
 		
