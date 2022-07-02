@@ -4,3 +4,6 @@ insert into user values (10003, CURRENT_DATE(), 'joao@itau.com.br', 'pass123word
 
 insert into comment values (10001, null, null, 'tt1201607', 'Great Movie', 10001);
 insert into comment values (10002, null, null, 'tt0096895', 'Awesome Movie', 10001);
+
+insert into rating values (10001, 'tt1201607', 10, 10001);
+insert into rating values (10002, 'tt0096895', 10, 10001);

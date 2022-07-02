@@ -36,6 +36,9 @@ Additional API documentation can be found in the Swagger UI at http://localhost:
 | GET | /users/:id/comments | Get comments by user id |
 | POST | /users/:id/comments | Create new comment by user id |
 
+| GET | /users/:id/ratings | Get ratings by user id |
+| POST | /users/:id/ratings | Create new rating by user id |
+
 
 # Sample API requests
 
@@ -81,6 +84,21 @@ Send **POST** request to http://localhost:8080/users/:id/comments replacing :id 
 }
 ```
 
+### List ratings by user ID
+
+Send **GET** request to http://localhost:8080/users/:id/ratings replacing :id with the user ID number.
+
+
+### Create new rating by user ID
+
+Send **POST** request to http://localhost:8080/users/:id/ratings replacing :id with the user ID number.
+
+```
+{
+    "idMovie": "tt0110912",
+    "rating": 10
+}
+```
 
 ## Movie Requests (OMDb)
 

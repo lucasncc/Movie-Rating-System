@@ -15,6 +15,7 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 import com.codingchallenge.movieratingsystem.comment.Comment;
+import com.codingchallenge.movieratingsystem.rating.Rating;
 
 @Entity
 public class User {
@@ -52,6 +53,8 @@ public class User {
 	@OneToMany(mappedBy="user")
 	private List<Comment> comments;
 
+	@OneToMany(mappedBy="user")
+	private List<Rating> ratings;
 	
 	protected User() {
 		
@@ -138,6 +141,12 @@ public class User {
 	}
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
+	}
+	public List<Rating> getRatings() {
+		return ratings;
+	}
+	public void setRatings(List<Rating> ratings) {
+		this.ratings = ratings;
 	}
 	@Override
 	public String toString() {

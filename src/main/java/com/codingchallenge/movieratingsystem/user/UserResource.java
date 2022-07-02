@@ -18,6 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.codingchallenge.movieratingsystem.comment.Comment;
 import com.codingchallenge.movieratingsystem.comment.CommentRepository;
+import com.codingchallenge.movieratingsystem.rating.Rating;
+import com.codingchallenge.movieratingsystem.rating.RatingRepository;
 
 @RestController
 public class UserResource {
@@ -28,6 +30,9 @@ public class UserResource {
 
 	@Autowired
 	private CommentRepository commentRepository;
+
+	@Autowired
+	private RatingRepository ratingRepository;
 	
 	//retrieveAllUsers
 	@GetMapping("/users")
@@ -115,6 +120,41 @@ public class UserResource {
 			.fromCurrentRequest()
 			.path("/{id}")
 			.buildAndExpand(comment.getId()).toUri();
+		
+		return ResponseEntity.created(location).build();
+	}
+	
+	//retrieve All Ratings By User Id
+	@GetMapping("/users/{id}/ratings")
+	public List<Rating> retrieveAllUserRatings(@PathVariable int id) {
+		Optional<User> userOptional = userRepository.findById(id);
+		
+		if(!userOptional.isPresent()) {
+			throw new UserNotFoundException("id - "+id);
+		}
+		
+		return userOptional.get().getRatings();
+	}
+	
+	/*create new comment
+	*/
+	@PostMapping("/users/{id}/ratings")
+	public ResponseEntity<Object> createRating(@PathVariable int id, @RequestBody Rating rating) {
+		Optional<User> userOptional = userRepository.findById(id);
+		
+		if(!userOptional.isPresent()) {
+			throw new UserNotFoundException("id - "+id);
+		}
+		
+		User user = userOptional.get();
+		
+		rating.setUser(user);
+		ratingRepository.save(rating);		
+		
+		URI location = ServletUriComponentsBuilder
+			.fromCurrentRequest()
+			.path("/{id}")
+			.buildAndExpand(rating.getId()).toUri();
 		
 		return ResponseEntity.created(location).build();
 	}
