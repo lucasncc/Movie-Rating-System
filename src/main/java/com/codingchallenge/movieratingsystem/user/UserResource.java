@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.codingchallenge.movieratingsystem.comment.Comment;
+import com.codingchallenge.movieratingsystem.comment.CommentRepository;
 
 @RestController
 public class UserResource {
@@ -24,6 +25,9 @@ public class UserResource {
 	
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private CommentRepository commentRepository;
 	
 	//retrieveAllUsers
 	@GetMapping("/users")
@@ -80,9 +84,9 @@ public class UserResource {
 		userRepository.deleteById(id);
 	}
 	
-	//retrieveAllCommentsByUser
+	//retrieve All Comments By User Id
 	@GetMapping("/users/{id}/comments")
-	public List<Comment> retrieveAllUsers(@PathVariable int id) {
+	public List<Comment> retrieveAllUserComments(@PathVariable int id) {
 		Optional<User> userOptional = userRepository.findById(id);
 		
 		if(!userOptional.isPresent()) {
@@ -90,5 +94,28 @@ public class UserResource {
 		}
 		
 		return userOptional.get().getComments();
+	}
+	
+	/*create new comment
+	*/
+	@PostMapping("/users/{id}/comments")
+	public ResponseEntity<Object> createComment(@PathVariable int id, @RequestBody Comment comment) {
+		Optional<User> userOptional = userRepository.findById(id);
+		
+		if(!userOptional.isPresent()) {
+			throw new UserNotFoundException("id - "+id);
+		}
+		
+		User user = userOptional.get();
+		
+		comment.setUser(user);
+		commentRepository.save(comment);		
+		
+		URI location = ServletUriComponentsBuilder
+			.fromCurrentRequest()
+			.path("/{id}")
+			.buildAndExpand(comment.getId()).toUri();
+		
+		return ResponseEntity.created(location).build();
 	}
 }
