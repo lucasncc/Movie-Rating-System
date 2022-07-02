@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.codingchallenge.movieratingsystem.comment.Comment;
+
 @RestController
 public class UserResource {
 
@@ -78,4 +80,15 @@ public class UserResource {
 		userRepository.deleteById(id);
 	}
 	
+	//retrieveAllCommentsByUser
+	@GetMapping("/users/{id}/comments")
+	public List<Comment> retrieveAllUsers(@PathVariable int id) {
+		Optional<User> userOptional = userRepository.findById(id);
+		
+		if(!userOptional.isPresent()) {
+			throw new UserNotFoundException("id - "+id);
+		}
+		
+		return userOptional.get().getComments();
+	}
 }

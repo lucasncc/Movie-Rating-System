@@ -33,6 +33,8 @@ Additional API documentation can be found in the Swagger UI at http://localhost:
 | GET | /movies/:term | Get movie info by term |
 | GET | /movies/id/:id | Get movie info by id |
 
+| GET | /users/:id/comments | Get comments by user id |
+
 
 # Sample API requests
 
@@ -61,6 +63,10 @@ Send **GET** request to http://localhost:4000/api/user/:id replacing :id with th
 ### Delete user by ID
 
 Send **DELETE** request to http://localhost:8080/users/:id replacing :id with the user ID number.
+
+### List comments by user ID
+
+Send **GET** request to http://localhost:4000/api/user/:id/comments replacing :id with the user ID number.
 
 ## Movie Requests (OMDb)
 

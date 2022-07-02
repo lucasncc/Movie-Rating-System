@@ -1,17 +1,20 @@
 package com.codingchallenge.movieratingsystem.user;
 
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
+
+import com.codingchallenge.movieratingsystem.comment.Comment;
 
 @Entity
 public class User {
@@ -45,10 +48,14 @@ public class User {
 	@Past(message = "Birthdate must be a past date")
 	private LocalDate birthDate;
 	
+	
+	@OneToMany(mappedBy="user")
+	private List<Comment> comments;
+
+	
 	protected User() {
 		
 	}
-	
 
 	public User(Integer id, String username, String password, String email, LocalDate birthDate) {
 		super();
@@ -117,7 +124,6 @@ public class User {
 	public String getProfile() {
 		return profile;
 	}
-
 	public void setProfile(String profile) {
 		this.profile = profile;
 	}
@@ -127,7 +133,12 @@ public class User {
 	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
-
+	public List<Comment> getComments() {
+		return comments;
+	}
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", points=" + points + ", username=" + username + ", email=" + email + ", profile="
